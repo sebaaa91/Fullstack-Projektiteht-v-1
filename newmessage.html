@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Message</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+    <h1>New Message</h1>
+    <nav>
+        <ul>
+            <ul><a href="index.html">Homepage</a></ul>
+            <ul><a href="newmessage.html">New Message</a></ul>
+            <ul><a href="messages.json">Guestbook</a></ul>
+        </ul>
+    </nav>
+    <form id="messageForm">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username"><br><br>
+        <label for="country">Country:</label>
+        <input type="text" id="country" name="country"><br><br>
+        <label for="message">Message:</label><br>
+        <textarea id="message" name="message" rows="4" cols="50"></textarea><br><br>
+        <input type="submit" value="Submit">
+    </form>
+    <div id="messages"></div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#messageForm').submit(function(event) {
+                event.preventDefault();
+                var formData = $(this).serialize();
+                $.ajax({
+                    type: 'POST',
+                    url: '/ajaxmessage',
+                    data: formData,
+                    success: function(data) {
+                        $('#messages').empty();
+                        data.forEach(function(message) {
+                            $('#messages').append(`<p><strong>${message.username} (${message.country}):</strong> ${message.message}</p>`);
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(xhr.responseText);
+                    }
+                });
+            });
+        });
+    </script>
+    <footer>Sebastian Nyman & Tuomas Takoja</footer>
+</body>
+</html>
